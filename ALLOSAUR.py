@@ -84,8 +84,8 @@ class TrustedPublicAuthority:
     @staticmethod
     def verify(params: Params, accumulator: Accumulator, y: int, witness: Witness) -> int:
         return all([
-            pairing(witness.C, add(mult(y, params.Pt), params.Qt)) == pairing(accumulator.V, params.Pt),
-            pairing(witness.Rm, add(mult(y, params.Kt), params.Qtm)) == pairing(add(mult(witness.x,params.K), params.K0), params.Qtm)
+            pairing(witness.C, add(mult(y, G2), accumulator.Qt)) == pairing(accumulator.V, G2),
+            pairing(witness.Rm, add(mult(y, params.Kt), accumulator.Qtm)) == pairing(add(mult(witness.x,params.K), params.K0), accumulator.Qtm)
         ]) 
 
 class GM:

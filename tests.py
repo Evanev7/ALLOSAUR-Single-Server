@@ -13,6 +13,7 @@ def test_witness_issuing(num_attempts, num_users):
     num_validated_proofs = 0
     num_correctly_invalidated_proofs = 0 
     num_incorrectly_invalidated_proofs = 0
+    num_incorrect_registrations = 0
 
 
     for _ in range(num_attempts):
@@ -25,7 +26,10 @@ def test_witness_issuing(num_attempts, num_users):
             gm.add(user.id)
             
             channel.user_request_witness(user.id, user, gm)
-            num_correct_registrations += 1
+            if TrustedPublicAuthority.verify(params, gm.accumulator, user.id, user.witness):
+                num_correct_registrations += 1
+            else:
+                num_incorrect_registrations += 1
             try:
                 channel.user_request_witness(randint(0,51289571), user, gm)
             except AssertionError:
@@ -53,6 +57,7 @@ def test_witness_issuing(num_attempts, num_users):
         
     print(f"""      {num_attempts} test runs over {num_users} users
         {num_correct_registrations} correctly verified
+        {num_incorrect_registrations} incorrectly verified
         {num_correct_witness_nonissues} correctly dismissed
         {num_correct_revocations} correctly revoked
         {num_validated_proofs} proofs checked
